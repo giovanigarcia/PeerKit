@@ -10,12 +10,12 @@ import Foundation
 import MultipeerConnectivity
 
 enum TransceiverMode {
-    case Browse, Advertise, Both
+    case browse, advertise, both
 }
 
 public class Transceiver: SessionDelegate {
 
-    var transceiverMode = TransceiverMode.Both
+    var transceiverMode = TransceiverMode.both
     let session: Session
     let advertiser: Advertiser
     let browser: Browser
@@ -27,10 +27,10 @@ public class Transceiver: SessionDelegate {
         session.delegate = self
     }
 
-    func startTransceiving(serviceType: String, discoveryInfo: [String: String]? = nil) {
-        advertiser.startAdvertising(serviceType: serviceType, discoveryInfo: discoveryInfo)
-        browser.startBrowsing(serviceType: serviceType)
-        transceiverMode = .Both
+    func startTransceiving(_ serviceType: String, discoveryInfo: [String: String]? = nil) {
+        advertiser.startAdvertising(serviceType, discoveryInfo: discoveryInfo)
+        browser.startBrowsing(serviceType)
+        transceiverMode = .both
     }
 
     func stopTransceiving() {
@@ -40,33 +40,33 @@ public class Transceiver: SessionDelegate {
         session.disconnect()
     }
 
-    func startAdvertising(serviceType: String, discoveryInfo: [String: String]? = nil) {
-        advertiser.startAdvertising(serviceType: serviceType, discoveryInfo: discoveryInfo)
-        transceiverMode = .Advertise
+    func startAdvertising(_ serviceType: String, discoveryInfo: [String: String]? = nil) {
+        advertiser.startAdvertising(serviceType, discoveryInfo: discoveryInfo)
+        transceiverMode = .advertise
     }
 
-    func startBrowsing(serviceType: String) {
-        browser.startBrowsing(serviceType: serviceType)
-        transceiverMode = .Browse
+    func startBrowsing(_ serviceType: String) {
+        browser.startBrowsing(serviceType)
+        transceiverMode = .browse
     }
 
-    public func connecting(myPeerID: MCPeerID, toPeer peer: MCPeerID) {
-        didConnecting(myPeerID: myPeerID, peer: peer)
+    public func connecting(_ myPeerID: MCPeerID, toPeer peer: MCPeerID) {
+        didConnecting(myPeerID, peer: peer)
     }
 
-    public func connected(myPeerID: MCPeerID, toPeer peer: MCPeerID) {
-        didConnect(myPeerID: myPeerID, peer: peer)
+    public func connected(_ myPeerID: MCPeerID, toPeer peer: MCPeerID) {
+        didConnect(myPeerID, peer: peer)
     }
 
-    public func disconnected(myPeerID: MCPeerID, fromPeer peer: MCPeerID) {
-        didDisconnect(myPeerID: myPeerID, peer: peer)
+    public func disconnected(_ myPeerID: MCPeerID, fromPeer peer: MCPeerID) {
+        didDisconnect(myPeerID, peer: peer)
     }
 
-    public func receivedData(myPeerID: MCPeerID, data: Data, fromPeer peer: MCPeerID) {
-        didReceiveData(data: data, fromPeer: peer)
+    public func receivedData(_ myPeerID: MCPeerID, data: Data, fromPeer peer: MCPeerID) {
+        didReceiveData(data, fromPeer: peer)
     }
 
-    public func finishReceivingResource(myPeerID: MCPeerID, resourceName: String, fromPeer peer: MCPeerID, atURL localURL: URL) {
-        didFinishReceivingResource(myPeerID: myPeerID, resourceName: resourceName, fromPeer: peer, atURL: localURL)
+    public func finishReceivingResource(_ myPeerID: MCPeerID, resourceName: String, fromPeer peer: MCPeerID, atURL localURL: URL) {
+        didFinishReceivingResource(myPeerID, resourceName: resourceName, fromPeer: peer, atURL: localURL)
     }
 }

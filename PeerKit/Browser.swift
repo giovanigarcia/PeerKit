@@ -9,7 +9,7 @@
 import Foundation
 import MultipeerConnectivity
 
-let timeStarted = NSDate()
+let timeStarted = Date()
 
 class Browser: NSObject, MCNearbyServiceBrowserDelegate {
 
@@ -22,7 +22,7 @@ class Browser: NSObject, MCNearbyServiceBrowserDelegate {
 
     var mcBrowser: MCNearbyServiceBrowser?
 
-    func startBrowsing(serviceType: String) {
+    func startBrowsing(_ serviceType: String) {
         mcBrowser = MCNearbyServiceBrowser(peer: mcSession.myPeerID, serviceType: serviceType)
         mcBrowser?.delegate = self
         mcBrowser?.startBrowsingForPeers()

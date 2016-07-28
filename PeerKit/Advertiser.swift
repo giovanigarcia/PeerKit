@@ -20,7 +20,7 @@ class Advertiser: NSObject, MCNearbyServiceAdvertiserDelegate {
 
     private var advertiser: MCNearbyServiceAdvertiser?
 
-    func startAdvertising(serviceType: String, discoveryInfo: [String: String]? = nil) {
+    func startAdvertising(_ serviceType: String, discoveryInfo: [String: String]? = nil) {
         advertiser = MCNearbyServiceAdvertiser(peer: mcSession.myPeerID, discoveryInfo: discoveryInfo, serviceType: serviceType)
         advertiser?.delegate = self
         advertiser?.startAdvertisingPeer()

@@ -258,12 +258,14 @@
 				TargetAttributes = {
 					E86EC4411AB734F5001A7734 = {
 						CreatedOnToolsVersion = 6.3;
+						LastSwiftMigration = 0800;
 					};
 					E86EC4511AB73597001A7734 = {
 						CreatedOnToolsVersion = 6.3;
 					};
 					E89FD6BF1A0C3CDC00C2FEF7 = {
 						CreatedOnToolsVersion = 6.1;
+						LastSwiftMigration = 0800;
 					};
 					E8DC82811AB7306C000BB585 = {
 						CreatedOnToolsVersion = 6.3;
@@ -396,6 +398,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.jpsim.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -414,6 +417,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.jpsim.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -564,6 +568,7 @@
 				PRODUCT_NAME = PeerKit;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -582,6 +587,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.jpsim.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = PeerKit;
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
