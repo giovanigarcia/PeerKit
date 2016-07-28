@@ -30,9 +30,9 @@ public var eventBlocks = [String: ObjectBlock]()
 
 #if os(iOS)
 import UIKit
-public let myName = UIDevice.currentDevice().name
+public let myName = UIDevice.current().name
 #else
-public let myName = NSHost.currentHost().localizedName ?? ""
+public let myName = Host.current().localizedName ?? ""
 #endif
 
 public var transceiver = Transceiver(displayName: myName)
@@ -42,9 +42,9 @@ public var session: MCSession?
 
 func didConnecting(myPeerID: MCPeerID, peer: MCPeerID) {
     if let onConnecting = onConnecting {
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async(execute: {
             onConnecting(myPeerID: myPeerID, peerID: peer)
-        }
+        })
     }
 }
 
@@ -53,40 +53,40 @@ func didConnect(myPeerID: MCPeerID, peer: MCPeerID) {
         session = transceiver.session.mcSession
     }
     if let onConnect = onConnect {
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async(execute: {
             onConnect(myPeerID: myPeerID, peerID: peer)
-        }
+        })
     }
 }
 
 func didDisconnect(myPeerID: MCPeerID, peer: MCPeerID) {
     if let onDisconnect = onDisconnect {
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async(execute: {
             onDisconnect(myPeerID: myPeerID, peerID: peer)
-        }
+        })
     }
 }
 
-func didReceiveData(data: NSData, fromPeer peer: MCPeerID) {
-    if let dict = NSKeyedUnarchiver.unarchiveObjectWithData(data) as? [String: AnyObject],
+func didReceiveData(data: Data, fromPeer peer: MCPeerID) {
+    if let dict = NSKeyedUnarchiver.unarchiveObject(with: data) as? [String: AnyObject],
         let event = dict["event"] as? String,
         let object: AnyObject? = dict["object"] {
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async(execute: {
                 if let onEvent = onEvent {
                     onEvent(peerID: peer, event: event, object: object)
                 }
                 if let eventBlock = eventBlocks[event] {
                     eventBlock(peerID: peer, object: object)
                 }
-            }
+            })
     }
 }
 
 func didFinishReceivingResource(myPeerID: MCPeerID, resourceName: String, fromPeer peer: MCPeerID, atURL localURL: NSURL) {
     if let onFinishReceivingResource = onFinishReceivingResource {
-        dispatch_async(dispatch_get_main_queue()) {
+        DispatchQueue.main.async(execute: {
             onFinishReceivingResource(myPeerID: myPeerID, resourceName: resourceName, peer: peer, localURL: localURL)
-        }
+        })
     }
 }
 
@@ -112,7 +112,7 @@ public func stopTransceiving() {
 // MARK: Events
 
 public func sendEvent(event: String, object: AnyObject? = nil, toPeers peers: [MCPeerID]? = session?.connectedPeers) {
-    guard let peers = peers where !peers.isEmpty else {
+    guard let peers = peers , !peers.isEmpty else {
         return
     }
 
@@ -122,22 +122,19 @@ public func sendEvent(event: String, object: AnyObject? = nil, toPeers peers: [M
         rootObject["object"] = object
     }
 
-    let data = NSKeyedArchiver.archivedDataWithRootObject(rootObject)
+    let data = NSKeyedArchiver.archivedData(withRootObject: rootObject)
 
     do {
-        try session?.sendData(data, toPeers: peers, withMode: .Reliable)
+        try session?.send(data, toPeers: peers, with: .reliable)
     } catch _ {
     }
 }
 
-public func sendResourceAtURL(resourceURL: NSURL,
-                   withName resourceName: String,
-  toPeers peers: [MCPeerID]? = session?.connectedPeers,
-  withCompletionHandler completionHandler: ((NSError?) -> Void)?) -> [NSProgress?]? {
-
+public func sendResourceAtURL(resourceURL: URL, withName resourceName: String, toPeers peers: [MCPeerID]? = session?.connectedPeers,
+                              withCompletionHandler completionHandler: ((NSError?) -> Void)?) -> [Progress?]? {
     if let session = session {
         return peers?.map { peerID in
-            return session.sendResourceAtURL(resourceURL, withName: resourceName, toPeer: peerID, withCompletionHandler: completionHandler)
+            return session.sendResource(at: resourceURL, withName: resourceName, toPeer: peerID, withCompletionHandler: completionHandler)
         }
     }
     return nil
