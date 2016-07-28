@@ -10,11 +10,11 @@ import Foundation
 import MultipeerConnectivity
 
 public protocol SessionDelegate {
-    func connecting(myPeerID: MCPeerID, toPeer peer: MCPeerID)
-    func connected(myPeerID: MCPeerID, toPeer peer: MCPeerID)
-    func disconnected(myPeerID: MCPeerID, fromPeer peer: MCPeerID)
-    func receivedData(myPeerID: MCPeerID, data: NSData, fromPeer peer: MCPeerID)
-    func finishReceivingResource(myPeerID: MCPeerID, resourceName: String, fromPeer peer: MCPeerID, atURL localURL: NSURL)
+    func connecting(_ myPeerID: MCPeerID, toPeer peer: MCPeerID)
+    func connected(_ myPeerID: MCPeerID, toPeer peer: MCPeerID)
+    func disconnected(_ myPeerID: MCPeerID, fromPeer peer: MCPeerID)
+    func receivedData(_ myPeerID: MCPeerID, data: Data, fromPeer peer: MCPeerID)
+    func finishReceivingResource(_ myPeerID: MCPeerID, resourceName: String, fromPeer peer: MCPeerID, atURL localURL: URL)
 }
 
 public class Session: NSObject, MCSessionDelegate {
@@ -38,30 +38,30 @@ public class Session: NSObject, MCSessionDelegate {
 
     // MARK: MCSessionDelegate
 
-    public func session(session: MCSession, peer peerID: MCPeerID, didChangeState state: MCSessionState) {
+    public func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         switch state {
-            case .Connecting:
+            case .connecting:
                 delegate?.connecting(myPeerID, toPeer: peerID)
-            case .Connected:
+            case .connected:
                 delegate?.connected(myPeerID, toPeer: peerID)
-            case .NotConnected:
+            case .notConnected:
                 delegate?.disconnected(myPeerID, fromPeer: peerID)
         }
     }
 
-    public func session(session: MCSession, didReceiveData data: NSData, fromPeer peerID: MCPeerID) {
+    public func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
         delegate?.receivedData(myPeerID, data: data, fromPeer: peerID)
     }
 
-    public func session(session: MCSession, didReceiveStream stream: NSInputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
+    public func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
         // unused
     }
 
-    public func session(session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, withProgress progress: NSProgress) {
+    public func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {
         // unused
     }
 
-    public func session(session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, atURL localURL: NSURL, withError error: NSError?) {
+    public func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL, withError error: NSError?) {
         if (error == nil) {
             delegate?.finishReceivingResource(myPeerID, resourceName: resourceName, fromPeer: peerID, atURL: localURL)
         }
